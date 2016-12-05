@@ -7,7 +7,10 @@
     "dev": "NODE_ENV=development nodemon ./bin/www",
     "grunt": "grunt",
     "start": "node ./bin/www",
-    "test": "mocha dist/test"
+    "test": "mocha dist/test",
+    "coverage": "istanbul cover _mocha dist/test/**/*",
+    "coveralls": "istanbul cover _mocha --report lcovonly -- -R spec dist/test/**/* && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
+
   },
   "repository": {
     "type": "git",
@@ -41,10 +44,12 @@
     "@types/mongoose": "^4.6.2",
     "@types/morgan": "^1.7.32",
     "chai": "^3.5.0",
+    "coveralls": "^2.11.15",
     "grunt": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-ts": "^6.0.0-beta.3",
+    "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "typescript": "^2.0.10"
   }

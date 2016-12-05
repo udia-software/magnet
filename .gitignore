@@ -59,3 +59,4 @@ internal/
 .idea
 .tscache/
 dist
+npm-debug.log
