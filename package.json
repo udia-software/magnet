@@ -10,7 +10,6 @@
     "test": "mocha dist/test",
     "coverage": "istanbul cover _mocha dist/test/**/*",
     "coveralls": "istanbul cover _mocha --report lcovonly -- -R spec dist/test/**/* && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
-
   },
   "repository": {
     "type": "git",
@@ -23,15 +22,26 @@
   },
   "homepage": "https://github.com/udia-software/magnet#readme",
   "dependencies": {
+    "@angular/common": "^2.3.0",
+    "@angular/compiler": "^2.3.0",
+    "@angular/core": "^2.3.0",
+    "@angular/forms": "^2.3.0",
+    "@angular/http": "^2.3.0",
+    "@angular/platform-browser": "^2.3.0",
+    "@angular/platform-browser-dynamic": "^2.3.0",
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
+    "core-js": "^2.4.1",
     "errorhandler": "^1.5.0",
     "express": "^4.14.0",
     "method-override": "^2.3.7",
     "mongoose": "^4.7.1",
     "morgan": "^1.7.0",
-    "pug": "^2.0.0-beta6",
-    "q": "^1.4.1"
+    "q": "^1.4.1",
+    "reflect-metadata": "^0.1.8",
+    "rxjs": "^5.0.0-rc.4",
+    "systemjs": "0.19.40",
+    "zone.js": "^0.7.2"
   },
   "devDependencies": {
     "@types/body-parser": "0.0.33",
@@ -46,6 +56,7 @@
     "chai": "^3.5.0",
     "coveralls": "^2.11.15",
     "grunt": "^1.0.1",
+    "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-ts": "^6.0.0-beta.3",

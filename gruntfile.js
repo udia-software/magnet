@@ -1,21 +1,69 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   "use strict";
 
   grunt.initConfig({
+    clean: [
+      "dist",
+      "coverage",
+      ".tscache"
+    ],
     copy: {
+      buildOnce: {
+        files: [
+          // Application client dependencies
+          // Only need to run this after clean.
+          {
+            expand: true,
+            cwd: "./node_modules/core-js/client",
+            src: ["shim.min.js", "shim.min.js.map"],
+            dest: "./dist/public/core-js/client"
+          },
+          {
+            expand: true,
+            cwd: "./node_modules/zone.js/dist",
+            src: ["zone.js"],
+            dest: "./dist/public/zone.js/dist"
+          },
+          {
+            expand: true,
+            cwd: "./node_modules/reflect-metadata",
+            src: ["Reflect.js", "Reflect.js.map"],
+            dest: "./dist/public/reflect-metadata"
+          },
+          {
+            expand: true,
+            cwd: "./node_modules/systemjs/dist",
+            src: ["system.src.js"],
+            dest: "./dist/public/systemjs/dist"
+          },
+          {
+            expand: true,
+            cwd: "./node_modules/rxjs",
+            src: ["**/*"],
+            dest: "./dist/public/rxjs"
+          },
+          {
+            expand: true,
+            cwd: "./node_modules/@angular",
+            src: ["**/*"],
+            dest: "./dist/public/@angular"
+          }
+        ]
+      },
       build: {
         files: [
+          // Application specific files
           {
             expand: true,
             cwd: "./public",
-            src: ["**"],
+            src: ["**/*"],
             dest: "./dist/public"
           },
           {
             expand: true,
-            cwd: "./views",
-            src: ["**"],
-            dest: "./dist/views"
+            cwd: "./src/client",
+            src: ["**", "!**/app/**"],
+            dest: "./dist/client"
           }
         ]
       }
@@ -27,9 +75,15 @@ module.exports = function(grunt) {
           dest: "./dist"
         }],
         options: {
-          module: "commonjs",
           target: "es6",
-          sourceMap: false
+          module: "commonjs",
+          moduleResolution: "node",
+          sourceMap: true,
+          emitDecoratorMetadata: true,
+          experimentalDecorators: true,
+          lib: ["es2016", "dom"],
+          noImplicitAny: true,
+          suppressImplicitAnyIndexErrors: true
         }
       }
     },
@@ -38,19 +92,22 @@ module.exports = function(grunt) {
         files: ["src/\*\*/\*.ts"],
         tasks: ["ts"]
       },
-      views: {
-        files: ["views/**/*.pug"],
-        tasks: ["copy"]
+      client: {
+        files: ["src/client/**/*"],
+        tasks: ["copy", "ts"]
       }
     }
   });
 
   grunt.loadNpmTasks("grunt-contrib-copy");
+  grunt.loadNpmTasks("grunt-contrib-clean");
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-ts");
 
   grunt.registerTask("default", [
-    "copy",
+    "clean",
+    "copy:buildOnce",
+    "copy:build",
     "ts"
   ]);
 

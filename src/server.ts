@@ -5,20 +5,11 @@ import * as logger from "morgan";
 import * as path from "path";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
-import mongoose = require("mongoose"); //import mongoose
+import mongoose = require("mongoose");
 
-//routes
-import { IndexRoute } from "./routes/index";
-
-//interfaces
-import { IUser } from "./interfaces/user"; //import IUser
-
-//models
-import { IModel } from "./models/model"; //import IModel
-import { IUserModel } from "./models/user"; //import IUserModel
-
-//schemas
-import { userSchema } from "./schemas/user"; //import userSchema
+import {IModel} from "./models/model";
+import {IUserModel} from "./models/user";
+import {userSchema} from "./schemas/user";
 
 /**
  * The server.
@@ -37,7 +28,7 @@ export class Server {
    * @class Server
    * @method bootstrap
    * @static
-   * @return {ng.auto.IInjectorService} Returns the newly created injector for this app.
+   * @return {Server} Returns the newly created server instance.
    */
   public static bootstrap(): Server {
     return new Server();
@@ -50,20 +41,17 @@ export class Server {
    * @constructor
    */
   constructor() {
-    //instance defaults
-    this.model = Object(); //initialize this to an empty object
+    // instance defaults
+    this.model = <IModel> Object(); //initialize this to an empty IModel object
 
-    //create expressjs application
+    // create Express application
     this.app = express();
 
-    //configure application
+    // configure application
     this.config();
 
-    //add routes
+    // add route for application and api
     this.routes();
-
-    //add api
-    this.api();
   }
 
   /**
@@ -75,47 +63,51 @@ export class Server {
   public config() {
     const MONGODB_CONNECTION: string = "mongodb://localhost:27017/magnet";
 
-    //add static paths
+    // add static paths
+    // noinspection TypeScriptValidateTypes
     this.app.use(express.static(path.join(__dirname, "public")));
 
-    //configure pug
-    this.app.set("views", path.join(__dirname, "views"));
-    this.app.set("view engine", "pug");
-
-    //mount logger
+    // mount logger
+    // noinspection TypeScriptValidateTypes
     this.app.use(logger("dev"));
 
-    //mount json form parser
+    // mount json form parser
+    // noinspection TypeScriptValidateTypes
     this.app.use(bodyParser.json());
 
-    //mount query string parser
+    // mount query string parser
+    // noinspection TypeScriptValidateTypes
     this.app.use(bodyParser.urlencoded({
       extended: true
     }));
 
-    //mount cookie parker
+    // mount cookie parker
+    // noinspection TypeScriptValidateTypes
     this.app.use(cookieParser("SECRET_GOES_HERE"));
 
-    //mount override
+    // mount override
+    // noinspection TypeScriptValidateTypes
     this.app.use(methodOverride());
 
-    //use q promises
+    // use q promises
     global.Promise = require("q").Promise;
     mongoose.Promise = global.Promise;
 
-    //connect to mongoose
+    // connect to mongoose
     let connection: mongoose.Connection = mongoose.createConnection(MONGODB_CONNECTION);
 
-    //create models
+    // create models
     this.model.user = connection.model<IUserModel>("User", userSchema);
 
     // catch 404 and forward to error handler
-    this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
-        err.status = 404;
-        next(err);
+    // noinspection TypeScriptValidateTypes
+    this.app.use(function (err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
+      err.status = 404;
+      next(err);
     });
 
-    //error handling
+    // error handling
+    // noinspection TypeScriptValidateTypes
     this.app.use(errorHandler());
   }
 
@@ -124,13 +116,22 @@ export class Server {
     let router: express.Router;
     router = express.Router();
 
-    //IndexRoute
-    IndexRoute.create(router);
+    router.route("/")
+      .get((req: express.Request, res: express.Response) => {
+        res.sendFile(path.join(__dirname, "client", "index.html"));
+      });
 
-    //use router middleware
+    router.route("/systemjs.config.js")
+      .get((req: express.Request, res: express.Response) => {
+        res.sendFile(path.join(__dirname, "client", "systemjs.config.js"));
+      });
+
+    // use router middleware
+    // noinspection TypeScriptValidateTypes
     this.app.use(router);
-  }
 
-  public api() {
+    // Serve the angular 2 application
+    // noinspection TypeScriptValidateTypes
+    this.app.use("/app", express.static(path.join(__dirname, "client", "app")));
   }
 }
