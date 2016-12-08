@@ -90,11 +90,11 @@ module.exports = function (grunt) {
     watch: {
       ts: {
         files: ["src/\*\*/\*.ts"],
-        tasks: ["ts"]
+        tasks: ["copy:build", "ts"]
       },
       client: {
         files: ["src/client/**/*"],
-        tasks: ["copy", "ts"]
+        tasks: ["copy:build", "ts"]
       }
     }
   });
