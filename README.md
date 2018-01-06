@@ -1,5 +1,7 @@
 # Magnet
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/udia-software/magnet.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.org/udia-software/magnet.svg?branch=master)](https://travis-ci.org/udia-software/magnet)
 [![Coverage Status](https://coveralls.io/repos/github/udia-software/magnet/badge.svg?branch=master)](https://coveralls.io/github/udia-software/magnet?branch=master)
 
